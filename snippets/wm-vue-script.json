@@ -1,0 +1,90 @@
+{
+	"WM - Base for .csp" : {
+		"scope": "objectscript-csp, vue, html, javascript",
+		"prefix" : "WM-HTML|CSS|JS Sample Base",
+		"body" : [
+			"<csp:class encoded=\"1\" private=\"1\">\n<w:html>\n\t<w:head title=\"$1\">\n\t\t<link rel=\"stylesheet\" href=\"#(%session.Get(\"StaticUrl\"))#/lib-np/css/external/vuetify/vuetify.min.css\"/>\n\t</w:head>\n\t<w:body>\n\t\t<v-app id=\"$2\">\n\t\t\t<v-main>\n\t\t\t</v-main>\n\t\t</v-app>\n\t</w:body>\n\t<w:js>\n\t\t<style type=\"text/css\"></style>\n\t\t<script type=\"text/javascript\" src='#(%session.Get(\"StaticUrl\"))#/lib-np/js/internal/wm-http.js?20201230'></script>\n\t\t<script type=\"text/javascript\">\n\t\t\tconst UrlMap = {\n\t\t\t\tobterMetodoExemplo(json){\n\t\t\t\t\treturn #server(packageBackend.classBackEnd.methodResourceBackEnd(jsonAsString))# \n\t\t\t\t},\n\t\t\t};\n\t\t\tnew Vue({\n\t\t\t\tel : '#$2',\n\t\t\t\tvuetify : new Vuetify(),\n\n\t\t\t\tcomponents : {},\n\n\t\t\t\tdata : {\n\t\t\t\t\tconfiguracao : {\n\t\t\t\t\t\tempresa : { id : '' },\n\t\t\t\t\t\tusuario : { id : '' },\n\t\t\t\t\t},\n\t\t\t\t},\n\n\t\t\t\t\/*Lifecycle Hooks*\/\n\t\t\t\tbeforeCreate() {},\n\t\t\t\tcreated() {},\n\t\t\t\tbeforeMounted() {},\n\n\t\t\t\tmounted() {\n\t\t\t\t\tthis.configuracao.empresa.id = parseInt(App.prototype.getSessionEmpresa())\n\t\t\t\t\tthis.configuracao.usuario.id = parseInt(App.prototype.idUsuario)\n\n\t\t\t\t\tthis.$$nextTick(() => {\n\t\t\t\t\t\tloaderClose()\n\t\t\t\t\t})\n\t\t\t\t},\n\n\t\t\t\tbeforeUpdate() {},\n\t\t\t\tupdated() {},\n\t\t\t\tactivated() {},\n\t\t\t\tdeactivated() {},\n\t\t\t\tbeforeDestroy() {},\n\t\t\t\tdestroyed() {},\n\t\t\t\t\/*End Lifecycle Hooks*\/\n\n\t\t\t\tcomputed : {\n\t\t\t\t\tsampleMethod(){\n\t\t\t\t\t\treturn ''\n\t\t\t\t\t}\n\t\t\t\t},\n\n\t\t\t\twatch : {\n\t\t\t\t\tsampleMethod(valorNovo, valorAntigo){}\n\t\t\t\t},\n\n\t\t\t\tmethods : {\n\t\t\t\t},\n\t\t\t});\n\t\t</script>\n\t</w:js>\n</w:html>"
+		],
+		"description" : "HTML Base to .csp for developers WM."
+	},
+
+	"WM - Method Async Vue" : {
+		"scope": "objectscript-csp, vue, html, javascript",
+		"prefix" : "WM-JS method async Vue sample",
+		"body" : [
+			"async methodSample(){\n\ttry {\n\t\tlet filtroJSON = {}\n\n\t\tfiltroJSON.configuracao = {\n\t\t\tempresa : { id : this.configuracao.empresa.id },\n\t\t\ttusuario : { id : this.configuracao.empresa.id },\n\t\t}\n\n\t\tresult = await #server(ClasseBackendResource.metodoBackEnd(JSON.stringify(filtroJSON)))#\n\t\tresponse = JSON.parse(result)\n\n\t\tif ( response.code != 200 ) {\n\t\t\tthrow new Error(`${response.result.name} ${response.result.detail}`)\n\t\t}\n\n\t\t\/*Here do whatever you want!!!*\/\n\n\t} catch (erro){\n\t\tNotifierMessage.errorMessage(erro.message)\n\t}\n},\n\n"
+		],
+		"description" : "Method Vue sample for developers WM."
+	},
+
+	"WM - Method Vue" : {
+		"scope": "objectscript-csp, vue, html, javascript",
+		"prefix" : "WM-JS method Vue sample",
+		"body" : [
+			"${1:nameMethod}(){\n\ttry {\n\t\tlet filtroJSON = {}\n\n\t\tfiltroJSON.configuracao = {\n\t\t\tempresa : { id : this.configuracao.empresa.id },\n\t\t\tusuario : { id : this.configuracao.usuario.id },\n\t\t}\n\n\t\tresult = #server(${2:packageAndClass}.${3:metodoBackEnd}(JSON.stringify(filtroJSON)))#\n\t\tresponse = JSON.parse(result)\n\n\t\tif ( response.code != 200 ) {\n\t\t\tthrow new Error(`${response.result.name} ${response.result.detail}`)\n\t\t}\n\n\t\t\/*Here do whatever you want!!!*\/\n\n\t} catch (erro){\n\t\tNotifierMessage.errorMessage(erro.message)\n\t}\n},\n\n"
+		],
+		"description" : "Method Vue sample for developers WM."
+	},
+
+	"WM - Method Vue(URLMap)" : {
+		"scope": "objectscript-csp, vue, html, javascript",
+		"prefix" : "WM-JS method Vue sample",
+		"body" : [
+			"${1:nameMethod}(){\n\tlet requisicaoJSON = {}\n\n\trequisicaoJSON.configuracao = {\n\t\tempresa : { id : this.configuracao.empresa.id },\n\t\tusuario : { id : this.configuracao.usuario.id },\n\t}\n\n\thttp.${2|get,post,put,delete|}.('${3:nameMethodURLMap}', JSON.stringify(requisicaoJSON))\n\t\t.then(response=>{\n\t\t\t\/*Here do whatever you want!!!*\/})\n\t\t.catch(erro => {\n\t\t\tif ((erro.name != undefined)&&(erro.name != \"\")) {\n\t\t\t\tNotifierMessage.errorMessage(`${erro.name} - ${erro.detail}`, true, 5000);\n\t\t\t} else {\n\t\t\t\tNotifierMessage.errorMessage(\"${4:erroNaoTratadoNoPadrao}\", true, 5000);\n\t\t\t}\n\t\t})\n\t\t.finally(() => {\n\t\t\t\/*Aqui sempre passa se precisar!!!*\/\n\t\t})\n},\n"
+		],
+		"description" : "Method Vue sample for developers WM."
+	},
+
+	"wm-import-wm-dialog" : {
+		"scope": "objectscript-csp, vue, html, javascript",
+		"prefix" : "WM-JS Import path file wm-dialog",
+		"description" : "Importação para o caminho da pasta do arquivo componente VUE wm-dialog.",
+		"body" : [
+			"<script type=\"text/javascript\" src='#(%session.Get(\"StaticUrl\"))#/lib-np/js/internal/components/wm-vuetify/wm-dialog/wm-dialog.js?${CURRENT_YEAR}${CURRENT_MONTH}${CURRENT_DATE}'></script>"
+		]
+	},
+	"wm-dialog" : {
+		"scope": "objectscript-csp, vue, html, javascript",
+		"prefix" : "WM-JS method wm-dialog",
+		"body" : [
+			"<wm-dialog\n\t:title=\"${1|String,ObjectVue}\"\n\t:is-persistent=\"\"\n\twidth=\"\"\n\t:is-open-dialog=isActiveAnexo\n\tv-on:close-dialog=\"\"\n\t>\n\t\t<template v-slot:content>\n\t\t\t<v-container>\n\t\t\t</v-container>\n\t\t</template>\n\t</wm-dialog>"
+		],
+		"description" : "Method Vue exemplo para o wm-dialog."
+	},
+	
+	"wm-import-datapicker" : {
+		"scope": "objectscript-csp, vue, html, javascript",
+		"prefix" : "WM-JS Import path file wm-datapicker",
+		"description" : "Importação para o caminho da pasta do arquivo componente VUE wm-datapicker.",
+		"body" : [
+			"<script type=\"text/javascript\" src='#(%session.Get(\"StaticUrl\"))#/lib-np/js/internal/components/wm-vuetify/wm-datepicker/wm-datepicker.js?${CURRENT_YEAR}${CURRENT_MONTH}${CURRENT_DATE}'></script>"
+		]
+	},
+
+	"wm-datapicker" : {
+		"scope": "objectscript-csp, vue, html, javascript",
+		"prefix" : "WM-HTML Componente wm-datapicker",
+		"body" : [
+			"<wm-datepicker\n\tref=\"${1}\"\n\t:idcomponente=\"${2|String,ObjectVue|}\"\n\tlabel=\"${3|String,ObjectVue|}\"\n\tv-bind:clean=\"${4:limpar}\"\n\tv-on:update:clean=\"${5:limpar} = \\$event\">\n</wm-datepicker>"
+		],
+		"description" : "Method Vue exemplo para o wm-datapicker."
+	},
+	
+	"wm-import-select-multiple" : {
+		"scope": "objectscript-csp, vue, html, javascript",
+		"prefix" : "WM-JS Import path file wm-select-multiple",
+		"description" : "Importação para o caminho da pasta do arquivo componente VUE wm-select-multiple.",
+		"body" : [
+			"<script type=\"text/javascript\" src='#(%session.Get(\"StaticUrl\"))#/lib-np/js/internal/components/wm-vuetify/wm-select-multiple/wm-select-multiple.js?${CURRENT_YEAR}${CURRENT_MONTH}${CURRENT_DATE}'></script>"
+		]
+	},
+
+	"wm-select-multiple" : {
+		"scope": "objectscript-csp, vue, html, javascript",
+		"prefix" : "WM-HTML Componente wm-select-multiple",
+		"body" : [
+			"<wm-select-multiple\n\tv-model=\"${1}\"\n\tid-componente=\"${2}\"\n\t:filtro-customizado-por=\"['descricao']\"\n\t:is-return-object=\"${3|true,false|}\"\n\t:items=\"${4}\"\n\titem-texto=\"\\${item['descricao']}\"\n\titem-texto-chip=\"\\${item['descricao']}\"\n\titem-valor=\"${5}\"\n\tlabel=\"${6}\"\n>\n</wm-select-multiple>"
+		],
+		"description" : "Method Vue exemplo para o wm-select-multiple."
+	}
+}

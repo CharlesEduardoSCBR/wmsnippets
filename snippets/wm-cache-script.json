@@ -1,0 +1,61 @@
+{
+  "WM - Method Standard Resource": {
+    "scope": "objectscript-class",
+    "prefix": "WM-CLS Resource Method",
+    "body": [
+      "ClassMethod ${1:methodName}(json As %String) As %String\n{\n\t#dim exception As %Exception.AbstractException\n\t#dim dto, dtoResponseFrontEnd As %DynamicObject = {}\n\t#dim dtoColecaoResponseFrontEnd As %DynamicArray = []\n\t#dim ${2:dtoContratoFrontEnd} As ${3:package.classeDTO}\n\t#dim response As ResponseDynamic\n\t\n\ttry {\n\t\tset dto = {}.%FromJSON(json)\n\t\t\n\t\tset ${2:dtoContratoFrontEnd} = ##class(${3:package.classeDTO}).createFrom(dto)\n\t\t\n\t\tset response = ##class(ResponseDynamic).get()\n\t} catch exception {\n\t\tset response = ##class(ResponseDynamic).error(exception)\n\t}\n\t\n\treturn response.toJSON()\n}\n\n"
+    ],
+    "description": "Method base sample for class Resource."
+  },
+
+  "WM - Class Sample DTO": {
+    "scope": "objectscript-class",
+    "prefix": "WM-CLS DTO Class",
+    "body": [
+      "Class ${1:package}.${2:className} Extends (lib.DTO, %RegisteredObject)\n{\nProperty id As %Integer;\nProperty empresa As ge.EmpresaDto;\nProperty usuario As ge.UsuarioDto;\n\nMethod %OnNew() As %Status [ Private ]\n{\n\tset ..empresa = ##class(ge.EmpresaDto).%New()\n\tset ..usuario = ##class(ge.UsuarioDto).%New()\n\n\treturn $$$$OK\n}\n\nClassMethod createFromJSON(json As %DynamicObject) As ${1:package}.${2:className}\n{\n\t#dim dto As ${1:package}.${2:className}\n\t\n\tset dto = ##class(${1:package}.${2:className}).%New()\n\t\n\tset dto.id = json.id\n\tset dto.empresa.id = json.empresa.id\n\tset dto.usuario.id = json.usuario.id\n\n\treturn dto\n}\n\nMethod toDynamicObject() As %DynamicObject\n{\n\t#dim json As %DynamicObject = {}\n\t\n\tset json.id = ..id\n\tset json.empresa = ..empresa.toDynamicObject()\n\tset json.usuario = ..usuario.toDynamicObject()\n\t\n\treturn json\n}\n\nMethod toModel() As ${3:persistentObject}\n{\n\t#dim ${4:namePersistentObject} As ${3:persistentObject}\n\t\n\treturn ${4:namePersistentObject}\n}\n}"
+    ],
+    "description": "Method base sample for class DTO."
+  },
+
+  "WM - Class Sample Repository": {
+    "scope": "objectscript-class",
+    "prefix": "WM-CLS Repository Class",
+    "body": [
+      "Class ${1:package}.${2:className} Extends lib.orm.Model",
+      "{",
+      "",
+      "Parameter TABLE = \"${3:packageBaseToPersistent_packageInto}.${4:classPersistent}\";",
+      "",
+      "",
+      "}"
+    ],
+    "description": "Method base sample for class repository."
+  },
+
+  "WM - Method Standard Service Search": {
+    "scope": "objectscript-class",
+    "prefix": "WM-CLS Service Method base sample for class service to do search",
+    "body": [
+      "ClassMethod ${1:nameMethod}(${2:objectDTO} As ${3:package}.${4:classDTO}) As %SQL.StatementResult{\n\t#dim exception As %Exception.AbstractException\n\t#dim repository As ${5:packageForRepository}.${6:classRepository}\n\t#dim result As %SQL.StatementResult\n\t\n\ttry {\n\t\tset repository = ##class(${5:packageForRepository}.${6:classRepository}).create()\n\n\t\tif (${2:objectDTO}.${7:parameterSearch} '= \"\") do repository.addCriteriaAND(\"${8:column} = \" _${2:objectDTO}.${7:parameterSearch})\n\n\t\tset result = repository.allObjectsByItSelf()\n\t} catch exception {\n\t\tthrow exception\n\t}\n\n\t\treturn result\n}\n\n"
+    ],
+    "description": "Method base sample for class service to do search."
+  },
+
+  "WM - Class Sample Test": {
+    "scope": "objectscript-class",
+    "prefix": "WM-CLS Test for create populated object class test",
+    "body": [
+      "Import test.util\n\nClass test.util.repository.${1:package}.${2:className} Extends test.util.repository.Modelo [ CompileAfter = test.util.repository.Modelo ]\n{\n\nParameter CLASSuNAME As %String = \"${3:packagePersistentWithUnderline}.${4:classPersistent}\";\nParameter PADRAO = 0;\n\nMethod create(indentificador = 0) As ${5:packagePersistent}.${6:classPersistent}\n{\n\treturn $$case(indentificador,\n\t\t\t\t..#PADRAO:..criacaoPadrao()\n\t\t\t)\n}\n\nMethod criacaoPadrao() As ${5:packagePersistent}.${6:classPersistent}\n{\n\t#dim ${7:nameObjeto} As ${5:packagePersistent}.${6:classPersistent}\n\n\tset ${7:nameObjeto} = ##class(${5:packagePersistent}.${6:classPersistent}).%New()\n\tset ${7:nameObjeto}.${8:propertyCodigo} = ..getCode()\n\tset ${7:nameObjeto}.${9:propertyEmpresa} = ##class(Populate).popule(\"Empresa\")\n\n\t$$$ThrowOnError(${7:nameObjeto}.%Save())\n\n\treturn ${7:nameObjeto}\n}\n\n}"
+    ],
+    "description": "Sample for create populated object class test."
+  },
+
+  "WM-CLS method base sample for class Test": {
+    "scope": "objectscript-class",
+    "prefix": "WM-CLS Test Method Base",
+    "body": [
+      "Method Test${1:methodName}()\n{\n\t#dim exception As %Exception.AbstractException\n\t#dim ${2:objectSample} As ${3:package}.${4:classPersistent}\n\n\ttry {\n\t\tset ${2:objectSample} = ##class(Populate).popule(\"${5:packageAndClassPopulate}\",,1)\n\n\t\tdo $$$$AssertEquals(${6:valorAComparar}, ${7:valorEsperado}, \"${8:Texto descrevendo o teste.}\")\n\t} catch exception {\n\t\tdo $$$$AssertEquals($$$$NO, $$$$YES, exception.DisplayString())\n\t}\n}"
+    ],
+    "description": "Method base sample for class Test."
+  }
+}

@@ -7,11 +7,38 @@
     "vscode": "^1.78.0"
   },
   "categories": [
+    "Snippets",
     "Other"
   ],
+  "repository": {
+    "url": "https://github.com/CharlesEduardoSCBR/wmsnippets"
+  },
+  "homepage": "https://github.com/vuetifyjs/vuetify-vscode",
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
+    "snippets": [
+      {
+        "language": "objectscript-class",
+        "path": "./snippets/wm-cache-script.json"
+      },
+      {
+        "language": "objectscript-csp",
+        "path": "./snippets/wm-vue-script.json"
+      },
+      {
+        "language": "vue",
+        "path": "./snippets/wm-vue-script.json"
+      },
+      {
+        "language": "html",
+        "path": "./snippets/wm-vue-script.json"
+      },
+      {
+        "language": "javascript",
+        "path": "./snippets/wm-vue-script.json"
+      }
+    ],
     "commands": [
       {
         "command": "wmsnippets.helloWorld",
